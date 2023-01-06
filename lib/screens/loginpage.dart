@@ -17,14 +17,15 @@ class Loginpage extends StatelessWidget {
 
   TextEditingController passwordcontroler = TextEditingController();
   bool? status;
+  String? token;
 
   @override
   Widget build(BuildContext context) {
-    var _Povider=Provider.of<FluttertaskProvider>(context,listen: false);
-    // var status=context.watch<FluttertaskProvider>().GetStatus;
+    var _Povider = Provider.of<FluttertaskProvider>(context, listen: false);
 
     return Scaffold(
-      body: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
             children: [
@@ -116,22 +117,28 @@ class Loginpage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 20),
             child: Button(
-              click: () async{
-               _Povider.login({
-                  "username": usernamecontroller.text,
-                      "password": passwordcontroler.text
+              click: () async {
+                SharedPreferences prefer =
+                    await SharedPreferences.getInstance();
+                status = prefer.getBool('status');
+                token = prefer.getString('token');
+                print(token);
+                _Povider.login(
+                  {
+                    "username": usernamecontroller.text,
+                    "password": passwordcontroler.text
+                  },
+                );
 
-                },);
-
-                SharedPreferences prefer=await SharedPreferences.getInstance();
-                status=prefer.getBool('status');
-                print(status);
-                if(status==true){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Buslist(),));
-                }else{
-                  Fluttertoast.showToast(msg:'This field may not be blank.' );
+                if (status == true) {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Buslist(),
+                      ));
+                } else {
+                  Fluttertoast.showToast(msg: 'Enter values');
                 }
-
               },
               buttontext: 'Login',
               buttonheight: 50,

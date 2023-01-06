@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+
 import 'package:fluttertask/service/providerclass.dart';
 import 'package:provider/provider.dart';
 
 import '../model/dricerlistmodel.dart';
 import '../widgets/button.dart';
+import '../widgets/shimmer.dart';
 import 'adddriver.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,8 +17,6 @@ class Driverlist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var Pdata = Provider.of<FluttertaskProvider>(context, listen: false);
-    var Pw=context.watch<FluttertaskProvider>().getdriverlist();
-
 
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +42,10 @@ class Driverlist extends StatelessWidget {
                           fontSize: 15),
                     );
                   } else {
-                    return CircularProgressIndicator();
+                    return Shimmers(
+                      height: 20,
+                      width: 70,
+                    );
                   }
                 },
               ),
@@ -50,6 +53,7 @@ class Driverlist extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
+
             Expanded(
               child: FutureBuilder<List<DriverList>>(
                 future: Pdata.getdriverlist(),
@@ -64,83 +68,83 @@ class Driverlist extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Container(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            bottomLeft: Radius.circular(10)),
-                                        color: Color(0xfff3f3f4),
-                                      ),
-                                      width: 70,
-                                      height: 70,
-                                      child: Center(
-                                        child: Container(
-                                          width: 50,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: AssetImage(
-                                                    'images/driver.png')),
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                          ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          bottomLeft: Radius.circular(10)),
+                                      color: Color(0xfff3f3f4),
+                                    ),
+                                    width: 70,
+                                    height: 70,
+                                    child: Center(
+                                      child: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: AssetImage(
+                                                  'images/driver.png')),
+                                          borderRadius:
+                                              BorderRadius.circular(50),
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 10,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "${driverdata.name}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          'Licn no:${driverdata.license_no}',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black),
+                                        ),
+                                      ],
                                     ),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "${driverdata.name}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            'Licn no:${driverdata.license_no}',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black),
-                                          ),
-                                        ],
-                                      ),
+                                  ),
+                                  Expanded(
+                                    child: Button(
+                                      click: () {
+                                        Pdata.deletdriver(driverdata.id!);
+                                        // print(driverdata.id);
+                                        Pdata.getdriverlist();
+                                      },
+                                      buttontext: 'Delete',
+                                      buttonheight: 40,
+                                      buttondecoration: BoxDecoration(
+                                          color: Color(0xffed173a),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      buttontextfontsize: 14,
+                                      buttonmarginright: 10,
+                                      buttonmarginleft: 20,
+                                      buttontextcolour: Colors.white,
                                     ),
-                                    Expanded(
-                                      child: Button(
-                                        click: () {
-                                          Pdata.deletdriver(driverdata.id!);
-                                          // print(driverdata.id);
-                                          Pdata.getdriverlist();
-
-
-                                        },
-                                        buttontext: 'Delete',
-                                        buttonheight: 40,
-                                        buttondecoration: BoxDecoration(
-                                            color: Color(0xffed173a),
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        buttontextfontsize: 14,
-                                        buttonmarginright: 10,
-                                        buttonmarginleft: 20,
-                                        buttontextcolour: Colors.white,
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                  )
+                                ],
                               ));
                         },
                         itemCount: snapshot.data!.length);
                   } else {
-                    return Center(child: CircularProgressIndicator());
+                    return   ListView.separated(itemBuilder: (context, index) {
+                      return Shimmercard();
+                    }, separatorBuilder: (context, index) {
+                      return SizedBox(height: 1,);
+                    }, itemCount: 7);
                   }
                 },
               ),
@@ -150,7 +154,10 @@ class Driverlist extends StatelessWidget {
             ),
             Button(
               click: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddDriver(),
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddDriver(),
                     ));
               },
               buttontext: 'Add Driver',

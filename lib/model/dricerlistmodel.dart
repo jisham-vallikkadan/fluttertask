@@ -21,7 +21,7 @@ class DriverList {
   }
 }
 
-List<DriverList> driverlist2 = <DriverList>[];
+
 // List<DriverList> driverlist = <DriverList>[
 //   DriverList(
 //       Driverimage: 'images/driver.png',

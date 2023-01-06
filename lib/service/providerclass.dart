@@ -5,6 +5,8 @@ import 'package:fluttertask/model/dricerlistmodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/buslistmodel.dart';
+
 class FluttertaskProvider with ChangeNotifier {
   String? key;
   String? tokn;
@@ -48,7 +50,6 @@ class FluttertaskProvider with ChangeNotifier {
           body['driver_list'].map((e) => DriverList.fromjson(e))).toList();
       notifyListeners();
       return listdata;
-
     } else {
       List<DriverList> listdata = [];
       return listdata;
@@ -66,21 +67,33 @@ class FluttertaskProvider with ChangeNotifier {
   }
 
   Future deletdriver(int id) async {
-    print('delde');
     var url = baseurl + 'DriverApi/' + key.toString() + '/';
-    var responce = await http
-        .delete(Uri.parse(url), headers: {"Authorization": 'Bearer ${tokn}'},body: {
-          'driver_id':id.toString()
-    });
-    notifyListeners();
-    var body=jsonDecode(responce.body);
-    print(body);
+    var responce = await http.delete(Uri.parse(url),
+        headers: {"Authorization": 'Bearer ${tokn}'},
+        body: {'driver_id': id.toString()});
 
-    if(responce.statusCode==200){
+    var body = jsonDecode(responce.body);
+    print(body);
+    notifyListeners();
+    if (responce.statusCode == 200) {
       return true;
-    }else{
+    } else {
       return false;
     }
-
   }
+
+  // Future<String> checktokenvalid(String token) async {
+  //   var url = baseurl + 'DriverApi/' + key.toString() + '/';
+  //   var responce = await http.get(
+  //     Uri.parse(url),
+  //     headers: {"Authorization": 'Bearer ${tokn}'},
+  //   );
+  //   if (responce.statusCode == 200) {
+  //     print('retuern true');
+  //     return 'true';
+  //   } else {
+  //     print('retuern false');
+  //     return 'false';
+  //   }
+  // }
 }

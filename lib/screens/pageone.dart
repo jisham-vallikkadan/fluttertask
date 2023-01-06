@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertask/screens/loginpage.dart';
 
 import '../widgets/button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Pageone extends StatelessWidget {
   const Pageone({Key? key}) : super(key: key);
@@ -48,8 +49,10 @@ class Pageone extends StatelessWidget {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Button(
-                  click: () {
-                    Navigator.push(
+                  click: ()async {
+                    SharedPreferences prfes=await SharedPreferences.getInstance();
+                    prfes.remove('status');
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => Loginpage(),
