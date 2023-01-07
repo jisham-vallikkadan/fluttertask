@@ -30,43 +30,41 @@ class Loginpage extends StatelessWidget {
           children: [
             Column(
               children: [
-                Container(
-                  // decoration: BoxDecoration(color: Colors.red,
-                  //     image: DecorationImage(
-                  //         image: AssetImage(
-                  //             "images/img.png"
-                  //         ),
-                  //         fit: BoxFit.cover
-                  //     )
-                  // ),
-                  color: Colors.red,
-                  width: double.infinity,
-                  height: 250,
+                SafeArea(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage("images/img.png"),
+                            fit: BoxFit.cover)),
+                    // color: Colors.red,
+                    width: double.infinity,
+                    height: 250,
 
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 30, bottom: 30),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Welcome',
-                          style: TextStyle(
-                              fontSize: 30,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Manage your Bus and Drivers',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 30, bottom: 30),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Welcome',
+                            style: TextStyle(
+                                fontSize: 30,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'Manage your Bus and Drivers',
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -99,6 +97,7 @@ class Loginpage extends StatelessWidget {
                     controller: passwordcontroler,
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
+
                         fillColor: Color(0xffeaeaea),
                         filled: true,
                         focusedBorder: OutlineInputBorder(
@@ -118,28 +117,14 @@ class Loginpage extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
               child: Button(
-                click: () async {
-                  SharedPreferences prefer =
-                      await SharedPreferences.getInstance();
-                  status = prefer.getBool('status');
-                  token = prefer.getString('token');
-                  print(token);
+                click: ()  {
                   _Povider.login(
                     {
                       "username": usernamecontroller.text,
                       "password": passwordcontroler.text
-                    },
+                    },context
                   );
 
-                  if (status == true) {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Buslist(),
-                        ));
-                  } else {
-                    Fluttertoast.showToast(msg: 'Enter values');
-                  }
                 },
                 buttontext: 'Login',
                 buttonheight: 50,

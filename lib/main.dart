@@ -4,6 +4,7 @@ import 'package:fluttertask/screens/buslist.dart';
 import 'package:fluttertask/screens/driverlist.dart';
 import 'package:fluttertask/screens/loginpage.dart';
 import 'package:fluttertask/screens/pageone.dart';
+import 'package:fluttertask/screens/test.dart';
 
 import 'package:fluttertask/service/providerclass.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(create: (context)=> FluttertaskProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Pageone(),
+        home: Loginpage(),
       ),
     );
 }

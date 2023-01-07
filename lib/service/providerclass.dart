@@ -6,20 +6,20 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/buslistmodel.dart';
+import '../screens/buslist.dart';
 
 class FluttertaskProvider with ChangeNotifier {
   String? key;
   String? tokn;
+  bool? staus;
 
   String baseurl = 'http://flutter.noviindus.co.in/api/';
 
-  Future login(
-    Map<String, dynamic> logindata,
-  ) async {
+  Future login(Map<String, dynamic> logindata,BuildContext) async {
     var url = baseurl + "LoginApi";
     var responce = await http.post(Uri.parse(url), body: logindata);
     var body = jsonDecode(responce.body);
-    print(body);
+    // print(body);
     SharedPreferences preferences = await SharedPreferences.getInstance();
     bool status = body['status'];
     String? token = body['access'];
@@ -34,6 +34,15 @@ class FluttertaskProvider with ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     tokn = sharedPreferences.getString('token');
     key = sharedPreferences.getString('apikey');
+    staus = sharedPreferences.getBool('status');
+    if(staus==true){
+      Navigator.pushReplacement(BuildContext, MaterialPageRoute(builder: (context) => Buslist(),));
+    }else{
+      print('enter valuerd');
+    }
+
+    print(staus);
+   // return staus.toString();
   }
 
   Future<List<DriverList>> getdriverlist() async {
@@ -96,4 +105,5 @@ class FluttertaskProvider with ChangeNotifier {
   //     return 'false';
   //   }
   // }
+
 }
